@@ -353,7 +353,7 @@ local function startCoinFarmTp(isActive)
             if tick() - lastTp < 1 then
                 tpCount = tpCount + 1
                 if tpCount > 3 then
-                    baseDelay = 1.5
+                    baseDelay = 1.5 -- замедляемся если больше 3 ТП в секунду
                     tpCount = 0
                 end
             else
@@ -380,12 +380,14 @@ local function startCoinFarmTp(isActive)
                 continue
             end
 
+            -- Проверка дистанции (не ТП если слишком далеко)
             local dist = (coin.Position - hrp.Position).Magnitude
             if dist > 200 then
                 collectedCoins[coin] = true
                 continue
             end
 
+            -- Имитация прыжка перед ТП
             local hum = char:FindFirstChild("Humanoid")
             if hum then
                 hum:ChangeState(Enum.HumanoidStateType.Jumping)
@@ -393,6 +395,7 @@ local function startCoinFarmTp(isActive)
             
             task.wait(0.1)
             
+            -- Плавное ТП с небольшим разбросом
             local offset = Vector3.new(
                 math.random(-1, 1) * 0.5,
                 2,
@@ -420,10 +423,10 @@ local function startCoinFarmTp(isActive)
     end)
 end
 
--- ===== RAYFIELD (ССЫЛКА ИСПРАВЛЕНА!) =====
+-- ===== RAYFIELD =====
 local function LaunchRayfield()
     local ok, Rayfield = pcall(function()
-        return loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source.lua'))()
+        return loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
     end)
     if not ok or not Rayfield then
         warn("Rayfield не загрузился")
